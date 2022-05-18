@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -eo pipefail
+
+if [[ -z "${SSH_KEY_SECRET_NAME}" ]]; then
+  echo "SSH_KEY_SECRET_NAME must be set"
+  exit 1;
+fi
+
+SSH_KEY=$(
+aws secretsmanager get-secret-value \
+  --secret-id "$SSH_KEY_SECRET_NAME" \
+  --query "SecretBinary" \
+  --output text
+)
+
+if [[ -z "${SSH_AGENT_PID:-}" ]] ; then
+  echo "Starting an ephemeral ssh-agent" >&2;
+  eval "$(ssh-agent -s)"
+fi
+
+echo "Loading ssh-key into ssh-agent (pid ${SSH_AGENT_PID:-})" >&2;
+echo "$SSH_KEY" | env SSH_ASKPASS="/bin/false" ssh-add -
