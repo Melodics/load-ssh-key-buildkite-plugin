@@ -12,7 +12,7 @@ echo "Loading SSH key from $SSH_KEY_SECRET_NAME"
 SSH_KEY_ENCODED=$(
 aws secretsmanager get-secret-value \
   --secret-id "$SSH_KEY_SECRET_NAME" \
-  --query SecretString \
+  --query SecretBinary \
   --output text
 )
 
@@ -21,13 +21,13 @@ SSH_KEY=$(echo $SSH_KEY_ENCODED | base64 --decode)
 if [[ -z "${SSH_KEY}" ]] ; then
   echo "SSH key could not be loaded" >&2;
   exit 1;
+else
+  echo "Got a ${#ssh_key} byte ssh key"
 fi
 
 if [[ -z "${SSH_AGENT_PID:-}" ]] ; then
   echo "Starting an ephemeral ssh-agent"
   eval "$(ssh-agent -s)"
-else
-  echo "Got a ${#ssh_key} byte ssh key"
 fi
 
 echo "Loading ssh-key into ssh-agent (pid ${SSH_AGENT_PID:-})"
