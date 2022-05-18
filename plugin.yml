@@ -1,0 +1,7 @@
+name: Load SSH Key
+description: Loads an SSH key from an AWS secret
+author: https://github.com/melodics-thomas
+requirements: ["aws"]
+configuration:
+  type: "object"
+  additionalProperties: false
