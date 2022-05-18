@@ -12,7 +12,7 @@ echo "Loading SSH key from $SSH_KEY_SECRET_NAME"
 SSH_KEY=$(
 aws secretsmanager get-secret-value \
   --secret-id "$SSH_KEY_SECRET_NAME" \
-  --query "SecretBinary" \
+  --query SecretString \
   --output text
 )
 
