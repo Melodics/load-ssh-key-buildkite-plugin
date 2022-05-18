@@ -16,7 +16,7 @@ aws secretsmanager get-secret-value \
   --output text
 )
 
-SSH_KEY=$(echo $SSH_KEY_ENCODED > base64 -d)
+SSH_KEY=$(echo $SSH_KEY_ENCODED | base64 --decode)
 
 if [[ -z "${SSH_KEY}" ]] ; then
   echo "SSH key could not be loaded" >&2;
