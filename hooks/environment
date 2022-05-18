@@ -3,9 +3,11 @@
 set -eo pipefail
 
 if [[ -z "${SSH_KEY_SECRET_NAME}" ]]; then
-  echo "SSH_KEY_SECRET_NAME must be set"
+  echo "SSH_KEY_SECRET_NAME must be set" >&2;
   exit 1;
 fi
+
+echo "Loading SSH key from $SSH_KEY_SECRET_NAME"
 
 SSH_KEY=$(
 aws secretsmanager get-secret-value \
@@ -14,10 +16,15 @@ aws secretsmanager get-secret-value \
   --output text
 )
 
+if [[ -z "${SSH_KEY}" ]] ; then
+  echo "SSH key could not be loaded" >&2;
+  exit 1;
+fi
+
 if [[ -z "${SSH_AGENT_PID:-}" ]] ; then
-  echo "Starting an ephemeral ssh-agent" >&2;
+  echo "Starting an ephemeral ssh-agent"
   eval "$(ssh-agent -s)"
 fi
 
-echo "Loading ssh-key into ssh-agent (pid ${SSH_AGENT_PID:-})" >&2;
+echo "Loading ssh-key into ssh-agent (pid ${SSH_AGENT_PID:-})"
 echo "$SSH_KEY" | env SSH_ASKPASS="/bin/false" ssh-add -
