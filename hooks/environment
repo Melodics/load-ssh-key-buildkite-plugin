@@ -9,12 +9,14 @@ fi
 
 echo "Loading SSH key from $SSH_KEY_SECRET_NAME"
 
-SSH_KEY=$(
+SSH_KEY_ENCODED=$(
 aws secretsmanager get-secret-value \
   --secret-id "$SSH_KEY_SECRET_NAME" \
   --query SecretString \
   --output text
 )
+
+SSH_KEY=$(echo $SSH_KEY_ENCODED > base64 -d)
 
 if [[ -z "${SSH_KEY}" ]] ; then
   echo "SSH key could not be loaded" >&2;
