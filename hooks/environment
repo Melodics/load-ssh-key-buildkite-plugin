@@ -4,12 +4,12 @@ set -eo pipefail
 
 SSH_KEY_SECRET_NAME=${BUILDKITE_PLUGIN_LOAD_SSH_KEY_BUILDKITE_PLUGIN_SECRET}
 
+echo "~~~ :key: Loading SSH key from \"${SSH_KEY_SECRET_NAME}\"..."
+
 if [[ -z "${SSH_KEY_SECRET_NAME}" ]]; then
-  echo "A secret name must be set" >&2;
+  echo ":exclamation: Error: No secret name was set!" >&2;
   exit 1;
 fi
-
-echo "~~~ :key: Loading SSH key from ${SSH_KEY_SECRET_NAME}..."
 
 SSH_KEY_ENCODED=$(
 aws secretsmanager get-secret-value \
