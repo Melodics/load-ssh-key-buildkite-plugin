@@ -10,7 +10,7 @@ Add the following to your `pipeline.yml`
 steps:
   - command: ls
     plugins:
-      - melodics/load-ssh-key#v0.0.4:
+      - melodics/load-ssh-key#v0.0.3:
           secret: "my-secret-name"
 ```
 
