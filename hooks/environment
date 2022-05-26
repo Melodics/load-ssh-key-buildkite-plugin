@@ -7,7 +7,7 @@ SSH_KEY_SECRET_NAME="${BUILDKITE_PLUGIN_LOAD_SSH_KEY_SECRET}"
 echo "~~~ :key: Loading SSH key from \"${SSH_KEY_SECRET_NAME}\"..."
 
 if [[ -z "${SSH_KEY_SECRET_NAME}" ]]; then
-  echo ":heavy_exclamation_mark: Error: No secret name was set!" >&2;
+  echo "Error: No secret name was set!" >&2;
   exit 1;
 fi
 
@@ -21,17 +21,17 @@ aws secretsmanager get-secret-value \
 SSH_KEY=$(echo $SSH_KEY_ENCODED | base64 --decode)
 
 if [[ -z "${SSH_KEY}" ]] ; then
-  echo ":key: SSH key could not be loaded" >&2;
+  echo "SSH key could not be loaded" >&2;
   exit 1;
 else
-  echo ":key: ${SSH_KEY} character SSH key loaded"
+  echo "${#SSH_KEY} character SSH key loaded"
 fi
 
 if [[ -z "${SSH_AGENT_PID:-}" ]] ; then
-  echo ":key: Starting an ephemeral ssh-agent..."
+  echo "Starting an ephemeral ssh-agent..."
   eval "$(ssh-agent -s)"
 fi
 
-echo ":key: Loading SSH key into ssh-agent (pid ${SSH_AGENT_PID:-})..."
+echo "Loading SSH key into ssh-agent (pid ${SSH_AGENT_PID:-})..."
 echo "$SSH_KEY" | env SSH_ASKPASS="/bin/false" ssh-add -
-echo ":key: SSH key loaded!"
+echo "SSH key loaded!"
