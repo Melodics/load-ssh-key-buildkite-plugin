@@ -2,12 +2,12 @@
 
 set -eo pipefail
 
-SSH_KEY_SECRET_NAME=${BUILDKITE_PLUGIN_LOAD_SSH_KEY_BUILDKITE_PLUGIN_SECRET}
+SSH_KEY_SECRET_NAME=${BUILDKITE_PLUGIN_LOAD_SSH_KEY_SECRET}
 
 echo "~~~ :key: Loading SSH key from \"${SSH_KEY_SECRET_NAME}\"..."
 
 if [[ -z "${SSH_KEY_SECRET_NAME}" ]]; then
-  echo ":exclamation: Error: No secret name was set!" >&2;
+  echo ":heavy_exclamation_mark: Error: No secret name was set!" >&2;
   exit 1;
 fi
 
