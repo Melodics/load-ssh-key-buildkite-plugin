@@ -10,7 +10,7 @@ Add the following to your `pipeline.yml`
 steps:
   - command: ls
     plugins:
-      - melodics/load-ssh-key#v0.0.3:
+      - melodics/load-ssh-key#v0.0.5:
           secret: "my-secret-name"
 ```
 
@@ -25,5 +25,6 @@ For this to run, you will need to:
 
 ### `secret` (Required, string)
 
-The name of the secret containing your SSH key. The AWS CLI used by your agent
-must be pre-authenticated to access this secret.
+The name of the secret containing your SSH key in plain text within the secret
+string. The AWS CLI used by your agent must be pre-authenticated to access this
+secret.

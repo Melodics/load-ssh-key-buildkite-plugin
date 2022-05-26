@@ -11,14 +11,12 @@ if [[ -z "${SSH_KEY_SECRET_NAME}" ]]; then
   exit 1;
 fi
 
-SSH_KEY_ENCODED=$(
+SSH_KEY=$(
 aws secretsmanager get-secret-value \
   --secret-id "$SSH_KEY_SECRET_NAME" \
-  --query SecretBinary \
+  --query SecretString \
   --output text
 )
-
-SSH_KEY=$(echo $SSH_KEY_ENCODED | base64 --decode)
 
 if [[ -z "${SSH_KEY}" ]] ; then
   echo "SSH key could not be loaded" >&2;
