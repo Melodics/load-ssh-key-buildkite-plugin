@@ -1,6 +1,6 @@
 services:
   lint:
     image: buildkite/plugin-linter
-    command: ['--id', 'a-github-user/file-counter']
+    command: ['--id', 'melodics/load-ssh-key']
     volumes:
       - ".:/plugin:ro"

@@ -8,9 +8,9 @@ Add the following to your `pipeline.yml`
 
 ```yml
 steps:
-    - command: 'my command',
-      plugins:
-        melodics/load-ssh-key:
+  - command: ls
+    plugins:
+      - melodics/load-ssh-key#v0.0.4:
           secret: "my-secret-name"
 ```
 
@@ -19,6 +19,11 @@ steps:
 For this to run, you will need to:
 
 - Set the `AWS_DEFAULT_REGION` environment variable
-- Provide the name of the secret via the `secret` configuration property
-- Have the AWS cli installed on your agent and authenticated to access the
-  secret with the given name
+- Have the AWS CLI installed in your buildkite agent
+
+## Configuration
+
+### `secret` (Required, string)
+
+The name of the secret containing your SSH key. The AWS CLI used by your agent
+must be pre-authenticated to access this secret.
