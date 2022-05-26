@@ -2,12 +2,14 @@
 
 set -eo pipefail
 
+SSH_KEY_SECRET_NAME=${BUILDKITE_PLUGIN_LOAD_SSH_KEY_BUILDKITE_PLUGIN_SECRET}
+
 if [[ -z "${SSH_KEY_SECRET_NAME}" ]]; then
-  echo "SSH_KEY_SECRET_NAME must be set" >&2;
+  echo "A secret name must be set" >&2;
   exit 1;
 fi
 
-echo "Loading SSH key from $SSH_KEY_SECRET_NAME"
+echo "~~~ :key: Loading SSH key from ${SSH_KEY_SECRET_NAME}..."
 
 SSH_KEY_ENCODED=$(
 aws secretsmanager get-secret-value \
@@ -19,16 +21,17 @@ aws secretsmanager get-secret-value \
 SSH_KEY=$(echo $SSH_KEY_ENCODED | base64 --decode)
 
 if [[ -z "${SSH_KEY}" ]] ; then
-  echo "SSH key could not be loaded" >&2;
+  echo ":key: SSH key could not be loaded" >&2;
   exit 1;
 else
-  echo "Got a ${#ssh_key} byte ssh key"
+  echo ":key: ${SSH_KEY} character SSH key loaded"
 fi
 
 if [[ -z "${SSH_AGENT_PID:-}" ]] ; then
-  echo "Starting an ephemeral ssh-agent"
+  echo ":key: Starting an ephemeral ssh-agent..."
   eval "$(ssh-agent -s)"
 fi
 
-echo "Loading ssh-key into ssh-agent (pid ${SSH_AGENT_PID:-})"
+echo ":key: Loading SSH key into ssh-agent (pid ${SSH_AGENT_PID:-})..."
 echo "$SSH_KEY" | env SSH_ASKPASS="/bin/false" ssh-add -
+echo ":key: SSH key loaded!"
